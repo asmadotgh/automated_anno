@@ -1,14 +1,17 @@
-'''
+"""
 Main function to automate sending announcements.
 Input: sender and receiver email. The starting date from which a week is considered.
 Output: sends email to the receiver email set above.
-'''
+"""
+
+#TODO: p0 document usage in the Ashdown wiki
+#TODO: p0 after properly testing, clone on scripts server and schedule a cron job
+
 import logging
 import datetime as dt
-from create_email import create_email
-
 from my_constants import MyConstants
 from logging_config import *
+from create_email import create_email
 
 from_email = 'asma_gh@mit.edu'
 curr_date = dt.date.today().strftime(MyConstants.DATE_FORMAT)
@@ -33,7 +36,6 @@ def is_valid_date(inp):
 
 if __name__ == "__main__":
     # logging.basicConfig(filename='main.log', level=logging.DEBUG)
-    # logging.config.dictConfig(config)
     logging.info('Creating newsletter ...')
     logging.info('Usage: \tpython main.py <from> <YYYY-MM-DD> <to>')
     logging.info('<from> is an optional email address ending in @mit.edu. If not set, the default value will be used.')

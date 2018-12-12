@@ -1,6 +1,6 @@
-'''
+"""
 Configurations for the log files.
-'''
+"""
 
 import logging.config
 import sys

@@ -1,6 +1,8 @@
-'''
+"""
 Parsing a google spreadsheet into a dataframe composing of relevant events.
-'''
+"""
+
+#TODO p1 check format of date, time and image extension
 
 import pandas as pd
 import datetime as dt
@@ -8,6 +10,8 @@ from googleapiclient.discovery import build
 from httplib2 import Http
 from oauth2client import file, client, tools
 from my_constants import MyConstants
+from logging_config import *
+
 
 def timely(inp_date_str, start_date_str):
     inp_date = dt.datetime.strptime(inp_date_str, MyConstants.DATE_FORMAT)
@@ -35,7 +39,7 @@ def parse_events(curr_date):
     values = result.get('values', [])
 
     if not values:
-        print('No data found.')
+        logging.warning('No data found.')
     else:
         for row in values:
             if not timely(row[1], curr_date):
