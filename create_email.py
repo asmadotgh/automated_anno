@@ -23,8 +23,7 @@ Summary
 
 """
 
-#TODO: p0 complete embedding photos/images/pdf
-#TODO: p2 template and footer
+#TODO: p0 complete embedding photos/images/pdf, seems like doesn't support inline css style
 
 import smtplib
 import datetime as dt
@@ -54,15 +53,15 @@ def create_summary_item(idx, row):
 
 
 def create_full_item(idx, row):
-    txt = '------------------------\n' + \
+    txt = '\n' + \
              str(idx) + '. ' + row['title'] + '\n' + create_human_readable_date(row['date']) + ', ' + \
              create_human_readable_time(row['time']) + ', ' + row['location'] + '\n' + \
              row['description'] + '\n'
 
-    html = '------------------------<br>' + \
+    html = '<hr><br><div style="padding-left:15px;">' + \
            '<b>' + str(idx) + '. ' + row['title'] + '<br>' + create_human_readable_date(row['date']) + ', ' + \
            create_human_readable_time(row['time']) + ', ' + row['location'] + '</b> <br>' + \
-           row['description'] + '<br>'
+           row['description'] + '<br></div>'
     if row['image']:
         ext = row['image'][-4:].lower()
         if ext == '.pdf':
@@ -111,18 +110,55 @@ def create_email(from_email, curr_date, to_email):
         </style>
       </head>
       <body>
-        <b> Ashdown events in the week of """ + create_human_readable_date(curr_date) + """</b><br><br>
-        <b> Summary </b> <br><br>"""
+        <table width="900" cellspacing="0" cellpadding="0" align="center" bgcolor="#ffffff" style="border-left:3px solid black;border-right:3px solid black;border-bottom:3px solid black;">
+        <!-- begin logo row -->
+        <tr>
+        <!-- begin ashdown logo cell -->
+        <td valign="middle" bgcolor="#333333" colspan="2"><a href="http://ashdown.mit.edu/"><img src="https://ashdown.mit.edu/images/toplogo3.png" width="900" height="60" border="0" alt="Ashdown Logo"/></a></td>
+        <!-- end ashdown logo cell -->
+        </tr>
+        <!-- end logo row -->
+        <!-- begin horizontal line effect -->
+        <tr><td width="900" colspan="2"><img src="https://ashdown.mit.edu/images/gradline.gif" width="900" height="18" border="0" alt="Line"></td></tr>
+        <!-- end horizontal line effect -->
+        <!-- begin main part of page -->
+        <tr>
+        <style type="text/css">
+        <!--
+        .blogtitle {font-family:Georgia,UnBatang,DejaVu Serif,Verdana,Trebuchet MS,FreeSerif,Arial,Helvetica,serif;font-size:32px;color:#000000;line-height:1.2em;}
+        .blogsubtitle {font-family:Georgia,UnBatang,DejaVu Serif,Verdana,Trebuchet MS,FreeSerif,Arial,Helvetica,serif;font-size:12px;color:#000000;line-height:1em;}
+        .blogdescription {font-family:Droid Sans,Trebuchet MS,Verdana,FreeSerif,Arial,Helvetica,serif;font-size:12px;color:#000000;line-height:2em;}
+        .blogsponsors {font-family:Droid Sans,Trebuchet MS,Verdana,FreeSerif,Arial,Helvetica,serif;font-size:10px;color:#808080;line-height:2em;margin-top:10px;}
+        -->
+        </style>
+        <div style="border-left:10px solid #eecea4;padding-left:15px;"><h1>
+        Ashdown Events</h1><div class="blogsubtitle">Week of """ + create_human_readable_date(curr_date) + """
+        </div></div><br/>
+        <table border="0" cellspacing="0" cellpadding="0"><tr><td valign="top">
+        <br><br>
+        <div style="border-left:10px solid #e0e0e0;padding-left:15px;">
+        <h1>Summary</h1></div>
+        <div style="padding-left:15px;">
+        """
 
     for idx, row in event_df.iterrows():
         row_txt, row_html = create_summary_item(idx+1, row)
         txt += row_txt
         html += row_html
+    html += """
+        </div>
+    """
     for idx, row in event_df.iterrows():
         row_txt, row_html = create_full_item(idx+1, row)
         txt += row_txt
         html += row_html
     html += """\
+        <!-- end main part of page -->
+        </table><br/>
+        <div align="center" class="smalltext" style="color:#A0A0A0;">
+        &copy; 2019 MIT.
+        Please report feedback about this website to ashdown-webmaster (at) mit.edu.<br/><br/>
+        </div>
       </body>
     </html>
     """

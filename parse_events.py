@@ -2,8 +2,6 @@
 Parsing a google spreadsheet into a dataframe composing of relevant events.
 """
 
-#TODO p1 check format of and image extension
-
 import pandas as pd
 import datetime as dt
 from googleapiclient.discovery import build
