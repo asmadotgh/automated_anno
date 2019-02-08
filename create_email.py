@@ -31,17 +31,17 @@ import datetime as dt
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-from my_constants import MyConstants
+from utils import Utils
 from logging_config import *
 from parse_events import parse_events
 
 
 def create_human_readable_date(inp_date):
-    return dt.datetime.strptime(inp_date, MyConstants.DATE_FORMAT).strftime(MyConstants.HUMAN_READABLE_DATE_FORMAT)
+    return dt.datetime.strptime(inp_date, Utils.DATE_FORMAT).strftime(Utils.HUMAN_READABLE_DATE_FORMAT)
 
 
 def create_human_readable_time(inp_time):
-    return dt.datetime.strptime(inp_time, MyConstants.TIME_FORMAT).strftime(MyConstants.HUMAN_READABLE_TIME_FORMAT)
+    return dt.datetime.strptime(inp_time, Utils.TIME_FORMAT).strftime(Utils.HUMAN_READABLE_TIME_FORMAT)
 
 
 def create_summary_item(idx, row):

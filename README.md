@@ -2,7 +2,7 @@
 This code automatically sends announcement emails to Ashdown community based on the event list from the designated spreadsheet.
 
 ## Usage
-python main.py \<from> \<YYYY-MM-DD> \<to>
+python main.py [--from_email=<from> --start_date=<YYYY-MM-DD> --to_email=<to>]
 
 \<from> is an optional email address ending in @mit.edu. If not set, the default value will be used.
 
