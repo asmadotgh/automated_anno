@@ -52,9 +52,10 @@ def parse_events(curr_date):
                     'Incorrect time format. Skipping row ' + str(idx + Utils.SPREADSHEET_STARTING_ROW) + '.')
                 continue
             df = df.append(
-                pd.Series(data={'title': row[0], 'date': row[1], 'time': row[2],
-                                'location': row[3], 'description': row[4], 'image': row[5] if len(row) > 5 else None}),
+                pd.Series(data={'title': row[0], 'date': row[1], 'start_time': row[2], 'end_time': row[3],
+                                'location': row[4], 'description': row[5], 'image': row[6] if len(row) > 7 else None}),
                 ignore_index=True)
 
     df.sort_values(by=['date', 'time'], inplace=True)
+    df = df.reset_index(drop=True)
     return df
