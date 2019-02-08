@@ -3,13 +3,13 @@ This code automatically sends announcement emails to Ashdown community based on 
 
 ## Usage
 pip install -r requirements.txt
-python main.py [--start_date=<YYYY-MM-DD> --from_email=<from> --to_email=<to>]
+python main.py [--start_date=<MM/DD/YYYY> --from_email=<from> --to_email=<to>]
 
-\<YYYY-MM-DD> is the starting date. It is optional. If not specified then anno will be generated for a week from today.
+\<MM/DD/YYYY> is the starting date. It is optional. If not specified then anno will be generated for a week from today.
 
-\<from> is an optional email address ending in @mit.edu. If not set, the default value will be used.
+\<from> is an optional email address. The defaul is ashdown.anno [at] gmail.
 
-\<to> is an optional email address ending in @mit.edu. If not set, the default value will be used.
+\<to> is an optional email address.
 
 ## Note
 The code has been tested with python 3.6.
