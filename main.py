@@ -16,6 +16,8 @@ from create_email import create_email
 
 
 
+# sample usage
+# python main.py --start_date=02/08/2019
 if __name__ == "__main__":
 
     argparser = argparse.ArgumentParser()
