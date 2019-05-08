@@ -1,8 +1,10 @@
 # Automated Announcement Generation
 This code automatically sends announcement emails to Ashdown community based on the event list from the designated spreadsheet.
 
-## Usage
+## Setup
 pip install -r requirements.txt
+
+## Usage
 python main.py [--start_date=<MM/DD/YYYY> --from_email=<from> --to_email=<to>]
 
 \<MM/DD/YYYY> is the starting date. It is optional. If not specified then anno will be generated for a week from today.
