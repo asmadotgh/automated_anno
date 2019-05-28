@@ -13,7 +13,7 @@ python main.py [--start_date=<MM/DD/YYYY>  --duration=<?{D/W/M}/ALL> --from_emai
 number of X nubmer of days, weeks, months, or everything in the future. 
 Examples: 5D = 5 days in the future, 2W = 2 weeks in the future, 1M = 1 month ahead, ALL = all future events 
 
-\<from> is an optional email address. The defaul is ashdown.anno [at] gmail.
+\<from> is an optional email address. The default is ashdown.anno [at] gmail.
 
 \<to> is an optional email address.
 
