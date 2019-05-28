@@ -160,6 +160,7 @@ def create_email(from_email, from_pass, curr_date, duration_input, to_email):
     server = smtplib.SMTP('smtp.gmail.com', 587)
     # gmail SSL port: 'smtp.gmail.com:587'
     # MIT port: outgoing.mit.edu:25
+    # MIT port: outgoing.mit.edu:587, username: Kerberos username (without @mit.edu), pass: kerboras pass
 
     server.starttls()
     server.login(from_email, from_pass)
@@ -168,4 +169,10 @@ def create_email(from_email, from_pass, curr_date, duration_input, to_email):
     # and message to send - here it is sent as one string.
     server.sendmail(from_email, to_email, msg.as_string())
     server.quit()
+
+    # TODO: Alternative: using non-authenticated mit email. Does not currently work.
+    # server = smtplib.SMTP('outgoing.mit.edu:25')
+    # server.sendmail('asma_gh@mit.edu', to_email, msg.as_string())
+    # server.quit()
+
     logging.info("Email sent successfully!")
