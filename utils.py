@@ -29,8 +29,10 @@ class Utils:
     FROM_EMAIL = 'ashdown.anno@gmail.com'
     FROM_PASS = 'tdyQm886QcwAZQS'
     CURR_DATE = dt.date.today().strftime(DATE_FORMAT)
+    DURATION = 'all'     # '?W', '?M', '?D', 'ALL'
     TO_EMAIL = 'asma_gh@mit.edu'  # ashdown-anno@mit.edu
 
+    @staticmethod
     def is_valid_date(inp):
         try:
             dt.datetime.strptime(inp, Utils.DATE_FORMAT)
@@ -40,6 +42,7 @@ class Utils:
                 'Error. Date needs to follow ' + Utils.INLINE_DATE_FORMAT + ' format. ' + str(sys.exc_info()[0]))
             return False
 
+    @staticmethod
     def is_valid_time(inp):
         try:
             dt.datetime.strptime(inp, Utils.TIME_FORMAT)
@@ -49,6 +52,42 @@ class Utils:
                 'Error. Time needs to follow ' + Utils.INLINE_TIME_FORMAT + ' format. ' + str(sys.exc_info()[0]))
             return False
 
+    @staticmethod
+    def get_duration_time_delta(duration_inp):
+        duration = duration_inp.lower()
+
+        try:
+
+            # All events in the future
+            if duration == 'all':
+                print(f'Processing all events in the future.')
+                return dt.timedelta(weeks=1000)
+
+            # x Weeks
+            week_r = re.compile('.*w')
+            if week_r.match(duration) is not None:
+                x = int(duration[:-1])
+                print(f'Processing {x} weeks into the future.')
+                return dt.timedelta(weeks=x)
+
+            # x Days
+            day_r = re.compile('.*d')
+            if day_r.match(duration) is not None:
+                x = int(duration[:-1])
+                print(f'Processing {x} days into the future.')
+                return dt.timedelta(days=x)
+
+            # x Months
+            month_r = re.compile('.*m')
+            if month_r.match(duration) is not None:
+                x = int(duration[:-1])
+                print(f'Processing {x} months into the future.')
+                return dt.timedelta(days=x*30)
+        except:
+            logging.error('Error. Duration needs to be in <?D/W/M> or ALL format. ' + str(sys.exc_info()[0]))
+            dt.timedelta(days=7)
+
+    @staticmethod
     def is_valid_image_format(inp):
         valid_extensions = ['jpg', 'jpeg', 'png', 'gif', 'JPG', 'JPEG', 'PNG', 'GIF']
         for ext in valid_extensions:
@@ -57,6 +96,7 @@ class Utils:
         logging.warning('Error. Image extension not supported. '
                         'Please use jpg, png, or gif. If you intend to use pdf, use the url in the text.')
 
+    @staticmethod
     def is_valid_email(inp):
         if Utils.EMAIL_REGEX.match(inp):
             return True

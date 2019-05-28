@@ -5,9 +5,13 @@ This code automatically sends announcement emails to Ashdown community based on 
 pip install -r requirements.txt
 
 ## Usage
-python main.py [--start_date=<MM/DD/YYYY> --from_email=<from> --to_email=<to>]
+python main.py [--start_date=<MM/DD/YYYY>  --duration=<?{D/W/M}/ALL> --from_email=<from> --from_pass=<pass> --to_email=<to> ]
 
 \<MM/DD/YYYY> is the starting date. It is optional. If not specified then anno will be generated for a week from today.
+
+\<X{D/W/M}/ALL> is how far ahead the anno is considering events. It can be identified in terms of 
+number of X nubmer of days, weeks, months, or everything in the future. 
+Examples: 5D = 5 days in the future, 2W = 2 weeks in the future, 1M = 1 month ahead, ALL = all future events 
 
 \<from> is an optional email address. The defaul is ashdown.anno [at] gmail.
 

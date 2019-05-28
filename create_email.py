@@ -85,9 +85,9 @@ def create_full_item(idx, row):
     return txt, html
 
 
-def create_email(from_email, from_pass, curr_date, to_email):
+def create_email(from_email, from_pass, curr_date, duration, to_email):
 
-    event_df = parse_events(curr_date)
+    event_df = parse_events(curr_date, duration)
 
     if len(event_df) == 0:
         logging.info('No events in the specified week. NOT sending emails.')

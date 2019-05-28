@@ -11,13 +11,14 @@ from utils import Utils
 from logging_config import *
 
 
-def timely(inp_date_str, start_date_str):
+def timely(inp_date_str, start_date_str, duration):
     inp_date = dt.datetime.strptime(inp_date_str, Utils.DATE_FORMAT)
     start_date = dt.datetime.strptime(start_date_str, Utils.DATE_FORMAT)
-    end_date = dt.datetime.strptime(start_date_str, Utils.DATE_FORMAT) + dt.timedelta(days=7)
+    end_date = dt.datetime.strptime(start_date_str, Utils.DATE_FORMAT) + Utils.get_duration_time_delta(duration)
     return inp_date >= start_date and inp_date <= end_date
 
-def parse_events(curr_date):
+
+def parse_events(curr_date, duration):
     df = pd.DataFrame(columns=['title', 'date', 'time', 'location', 'description', 'image'])
 
     # The file token.json stores the user's access and refresh tokens, and is
@@ -44,7 +45,7 @@ def parse_events(curr_date):
                 logging.warning(
                     'Incorrect date format. Skipping row ' + str(idx + Utils.SPREADSHEET_STARTING_ROW) + '.')
                 continue
-            if not timely(row[1], curr_date):
+            if not timely(row[1], curr_date, duration):
                 logging.warning('Date not in range. Skipping row ' + str(idx + Utils.SPREADSHEET_STARTING_ROW) + '.')
                 continue
             if not Utils.is_valid_time(row[2]):
