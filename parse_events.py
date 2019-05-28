@@ -14,12 +14,12 @@ from logging_config import *
 def timely(inp_date_str, start_date_str, duration):
     inp_date = dt.datetime.strptime(inp_date_str, Utils.DATE_FORMAT)
     start_date = dt.datetime.strptime(start_date_str, Utils.DATE_FORMAT)
-    end_date = dt.datetime.strptime(start_date_str, Utils.DATE_FORMAT) + Utils.get_duration_time_delta(duration)
+    end_date = dt.datetime.strptime(start_date_str, Utils.DATE_FORMAT) + duration
     return inp_date >= start_date and inp_date <= end_date
 
 
 def parse_events(curr_date, duration):
-    df = pd.DataFrame(columns=['title', 'date', 'time', 'location', 'description', 'image'])
+    df = pd.DataFrame(columns=['title', 'date', 'start_time', 'end_time', 'location', 'description', 'image'])
 
     # The file token.json stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
@@ -54,9 +54,9 @@ def parse_events(curr_date, duration):
                 continue
             df = df.append(
                 pd.Series(data={'title': row[0], 'date': row[1], 'start_time': row[2], 'end_time': row[3],
-                                'location': row[4], 'description': row[5], 'image': row[6] if len(row) > 7 else None}),
+                                'location': row[4], 'description': row[5], 'image': row[6] if len(row) > 6 else None}),
                 ignore_index=True)
 
-    df.sort_values(by=['date', 'time'], inplace=True)
+    df.sort_values(by=['date', 'start_time'], inplace=True)
     df = df.reset_index(drop=True)
     return df

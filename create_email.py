@@ -42,10 +42,12 @@ def create_human_readable_date(inp_date):
 def create_human_readable_time(inp_time):
     return dt.datetime.strptime(inp_time, Utils.TIME_FORMAT).strftime(Utils.HUMAN_READABLE_TIME_FORMAT)
 
+
 def create_human_readable_end_time(inp_time):
     if inp_time == '':
         return ''
     return ' - ' + dt.datetime.strptime(inp_time, Utils.TIME_FORMAT).strftime(Utils.HUMAN_READABLE_TIME_FORMAT)
+
 
 def create_summary_item(idx, row):
     txt = str(idx) + '. ' + row['title'] + ', ' + create_human_readable_date(row['date']) + ', ' + \
@@ -68,24 +70,27 @@ def create_full_item(idx, row):
            create_human_readable_time(row['start_time']) + create_human_readable_end_time(row['end_time']) + ', ' + \
            row['location'] + '</b> <br>' + row['description'] + '<br>'
     if row['image']:
-        ext = row['image'][-4:].lower()
-        if ext == '.pdf':
-            src_prefix = 'https://drive.google.com/viewerng/viewer?embedded=true&url='
-            # html += '<embed src="' + src_prefix+row['image'] + '" width="300"> <br>'
-            # html += '<embed src="' + row['image'] + '" type = "application/pdf" width="300"/> <br>'
-            html += '[PDF cannot be loaded. Click <a href="' + src_prefix+row['image'] + '">here</a> to view.]<br>'
-            # html += '<object width = "300" type = "application/pdf" data="' + \
-            #         row['image'] + '" > ' + \
-            #         '<p>[PDF cannot be loaded. Click <a href="' + row['image'] + '">here</a> to view.]</p></object>'
-        elif ext == '.png' or ext == '.jpg' or ext == '.jpeg' or ext == '.gif':
-            html += '<img class = "inline" src="' + row['image'] + \
-                      '" alt="Poster for '+row['title'] + '" width="300"> <br>'
-        else:
-            logging.warning('Image format not supported.')
+        html += 'Click <a href="' + row['image'] + '">here</a> to view corresponding poster/image.<br>'
+        # ext = row['image'][-4:].lower()
+        # if ext == '.pdf':
+        #     src_prefix = 'https://drive.google.com/viewerng/viewer?embedded=true&url='
+        #     # html += '<embed src="' + src_prefix+row['image'] + '" width="300"> <br>'
+        #     # html += '<embed src="' + row['image'] + '" type = "application/pdf" width="300"/> <br>'
+        #     html += '[PDF cannot be loaded. Click <a href="' + src_prefix+row['image'] + '">here</a> to view.]<br>'
+        #     # html += '<object width = "300" type = "application/pdf" data="' + \
+        #     #         row['image'] + '" > ' + \
+        #     #         '<p>[PDF cannot be loaded. Click <a href="' + row['image'] + '">here</a> to view.]</p></object>'
+        # elif ext == '.png' or ext == '.jpg' or ext == '.jpeg' or ext == '.gif':
+        #     html += '<img class = "inline" src="' + row['image'] + \
+        #               '" alt="Poster for '+row['title'] + '" width="300"> <br>'
+        # else:
+        #     logging.warning('Image format not supported.')
     return txt, html
 
 
-def create_email(from_email, from_pass, curr_date, duration, to_email):
+def create_email(from_email, from_pass, curr_date, duration_input, to_email):
+
+    duration = Utils.get_duration_time_delta(duration_input)
 
     event_df = parse_events(curr_date, duration)
 

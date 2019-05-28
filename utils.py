@@ -10,7 +10,7 @@ class Utils:
 
     # The ID and range of a sample spreadsheet.
     SPREADSHEET_ID = '1WLVTQtwsCHL1uAG5nFK0u7YN2qtzV1iOyvOGOFHM024'
-    RANGE_NAME = 'Form Responses!B2:G'
+    RANGE_NAME = 'Form Responses!B2:H'
 
     # DATE_FORMAT = '%Y-%m-%d'
     DATE_FORMAT = '%m/%d/%Y'
