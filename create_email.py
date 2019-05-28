@@ -70,7 +70,7 @@ def create_full_item(idx, row):
            create_human_readable_time(row['start_time']) + create_human_readable_end_time(row['end_time']) + ', ' + \
            row['location'] + '</b> <br>' + row['description'] + '<br>'
     if row['image']:
-        html += 'Click <a href="' + row['image'] + '">here</a> to view corresponding poster/image.<br>'
+        html += 'Click <a href="' + row['image'] + '">here</a> to view the corresponding poster/image.<br>'
         # ext = row['image'][-4:].lower()
         # if ext == '.pdf':
         #     src_prefix = 'https://drive.google.com/viewerng/viewer?embedded=true&url='
