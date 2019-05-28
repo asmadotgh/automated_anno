@@ -1,11 +1,10 @@
 """
 Main function to automate sending announcements.
-Input: sender and receiver email. The starting date from which a week is considered.
+Input: sender and receiver email. The starting date and duration are for filtering the relevant events in the future.
 Output: sends email to the receiver email set above.
 """
 
-#TODO: p0 document usage in the Ashdown wiki
-#TODO: p0 after properly testing, clone scripts on server and schedule a cron job
+# TODO: p0 document usage in the Ashdown wiki
 
 import logging
 import datetime as dt
@@ -15,9 +14,8 @@ from logging_config import *
 from create_email import create_email
 
 
-
-# sample usage
-# python main.py --start_date=02/08/2019
+# Sample usage
+# python main.py --start_date=02/08/2019 --duration=1W
 if __name__ == "__main__":
 
     argparser = argparse.ArgumentParser()
@@ -48,8 +46,6 @@ if __name__ == "__main__":
     logging.info('Creating newsletter ...')
     logging.info(
         'Usage: python main.py [--start_date=<' + Utils.INLINE_DATE_FORMAT + '> --from_email=<from> --to_email=<to>]')
-
-    #TODO: check if the date is plausible?
 
     is_valid = Utils.is_valid_email(args.from_email) and Utils.is_valid_email(args.to_email) and Utils.is_valid_date(
         args.start_date)

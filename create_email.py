@@ -70,6 +70,7 @@ def create_full_item(idx, row):
            create_human_readable_time(row['start_time']) + create_human_readable_end_time(row['end_time']) + ', ' + \
            row['location'] + '</b> <br>' + row['description'] + '<br>'
     if row['image']:
+        src_prefix = 'https://drive.google.com/viewerng/viewer?embedded=true&url='
         html += 'Click <a href="' + row['image'] + '">here</a> to view the corresponding poster/image.<br>'
         # ext = row['image'][-4:].lower()
         # if ext == '.pdf':
@@ -138,7 +139,7 @@ def create_email(from_email, from_pass, curr_date, duration_input, to_email):
         </table><br/>
         <div align="center" class="smalltext" style="color:#A0A0A0;">
         &copy; 2019 MIT.
-        Please report feedback about this website to ashdown-tech (at) mit.edu.<br/><br/>
+        Please report feedback about automated announcement emails to ashdown-tech (at) mit (dot) edu.<br/><br/>
         </div>
       </body>
     </html>
