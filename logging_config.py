@@ -4,6 +4,7 @@ Configurations for the log files.
 
 import logging.config
 import sys
+from utils import Utils
 
 
 class _ExcludeErrorsFilter(logging.Filter):
@@ -45,7 +46,7 @@ config = {
             'class': 'logging.FileHandler',
             'level': 'DEBUG',
             'formatter': 'my_formatter',
-            'filename': 'automated_anno.log',
+            'filename': Utils.LOGS_FILENAME,
             'encoding': 'utf8'
         }
     },

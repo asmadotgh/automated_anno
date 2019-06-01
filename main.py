@@ -7,14 +7,15 @@ Output: sends email to the receiver email set above.
 # TODO: p0 document usage in the Ashdown wiki
 
 import argparse
-from utils import Utils
 from logging_config import *
-from create_email import create_email
+from create_email import create_email, send_logs_email
 
 
 # Sample usage
 # python main.py --start_date=02/08/2019 --duration=1W
 if __name__ == "__main__":
+    # Reset the logs file
+    open(Utils.LOGS_FILENAME, 'w').close()
 
     argparser = argparse.ArgumentParser()
     argparser.add_argument('--from_email', type=str,
@@ -44,18 +45,22 @@ if __name__ == "__main__":
                            help=".")
     args = argparser.parse_args()
 
-    # logging.basicConfig(filename='main.log', level=logging.DEBUG)
     logging.info('Creating newsletter ...')
     logging.info(
         'Usage: python main.py [--start_date=<' + Utils.INLINE_DATE_FORMAT + '> --from_email=<from> --to_email=<to>]')
 
     is_valid = Utils.is_valid_email(args.from_email) and Utils.is_valid_email(args.to_email) and Utils.is_valid_date(
         args.start_date)
-    if is_valid:
-        create_email(args.from_email, args.from_pass, args.start_date, args.duration, args.to_email)
-    else:
-        logging.error(
-            'Aborting... Usage: python main.py [--start_date=<' + Utils.INLINE_DATE_FORMAT + \
-            '> --from_email=<from> --to_email=<to>]')
+    try:
+        if is_valid:
+            create_email(args.from_email, args.from_pass, args.start_date, args.duration, args.to_email)
+        else:
+            logging.error(
+                'Aborting... Usage: python main.py [--start_date=<' + Utils.INLINE_DATE_FORMAT + \
+                '> --from_email=<from> --to_email=<to> --logs_email=<bcc>]')
+    finally:
+        send_logs_email(args.from_email, args.from_pass, args.logs_email)
+
+
 
 

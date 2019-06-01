@@ -23,14 +23,11 @@ Summary
 
 """
 
-#TODO: p0 complete embedding photos/images/pdf, seems like doesn't support inline css style
-
 import smtplib
 import datetime as dt
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-from utils import Utils
 from logging_config import *
 from parse_events import parse_events
 
@@ -111,7 +108,7 @@ def create_email(from_email, from_pass, curr_date, duration_input, to_email):
         logging.info('Events were not approved by the officer. Aborting sending email.')
         return
 
-    elif validated.lower() == 'y' or validated.lower() == 'yes':
+    if validated.lower() == 'y' or validated.lower() == 'yes':
         # Create message container - the correct MIME type is multipart/alternative.
         msg = MIMEMultipart('alternative')
         msg['Subject'] = 'Ashdown-Anno for ' + create_human_readable_date(curr_date)
@@ -193,4 +190,44 @@ def create_email(from_email, from_pass, curr_date, duration_input, to_email):
         else:
             print('Email not sent. Only gmail or mit email is supported for the from_email.')
             logging.warning('Email not sent. Only gmail or mit email is supported for the from_email.')
+
+
+def send_logs_email(from_email, from_pass, logs_email):
+    from_email = from_email.lower()
+    to_email = logs_email.lower()
+
+    # Create message container - the correct MIME type is multipart/alternative.
+    msg = MIMEMultipart('alternative')
+    msg['Subject'] = 'Ashdown-Anno logs'
+    msg['From'] = 'Ashdown-Anno Logs <' + from_email + '>'
+    msg['To'] = to_email
+
+    msg.add_header('Content-Type', 'text')
+    with open(Utils.LOGS_FILENAME) as f:
+        s = f.read()
+        msg.set_payload('LATEST AUTOMATED ASHDOWN-ANNO RUN LOGS:\n\n'+s)
+
+    # Send the message via local SMTP server.
+
+    if from_email.endswith('@gmail.com'):
+
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        # gmail SSL port: 'smtp.gmail.com:587'
+        # MIT port: outgoing.mit.edu:25
+        # MIT port: outgoing.mit.edu:587, username: Kerberos username (without @mit.edu), pass: kerboras pass
+
+        server.starttls()
+        server.login(from_email, from_pass)
+
+        # sendmail function takes 3 arguments: sender's address, recipient's address
+        # and message to send - here it is sent as one string.
+        server.sendmail(from_email, to_email, msg.as_string())
+        server.quit()
+
+    elif from_email.endswith('@mit.edu'):
+        server = smtplib.SMTP('outgoing.mit.edu:25')
+        server.sendmail(from_email, to_email, msg.as_string())
+        server.quit()
+    else:
+        print('Logs email not sent. Only gmail or mit email is supported for the from_email.')
 

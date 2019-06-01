@@ -7,7 +7,6 @@ import datetime as dt
 from googleapiclient.discovery import build
 from httplib2 import Http
 from oauth2client import file, client, tools
-from utils import Utils
 from logging_config import *
 
 
