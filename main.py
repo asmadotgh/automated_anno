@@ -4,8 +4,6 @@ Input: sender and receiver email. The starting date and duration are for filteri
 Output: sends email to the receiver email set above.
 """
 
-# TODO: p0 document usage in the Ashdown wiki
-
 import argparse
 from logging_config import *
 from create_email import create_email, send_logs_email
