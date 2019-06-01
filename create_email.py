@@ -90,6 +90,8 @@ def create_full_item(idx, row):
 
 
 def create_email(from_email, from_pass, curr_date, duration_input, to_email):
+    from_email = from_email.lower()
+    to_email = to_email.lower()
 
     duration = Utils.get_duration_time_delta(duration_input)
 
@@ -157,22 +159,26 @@ def create_email(from_email, from_pass, curr_date, duration_input, to_email):
 
     # Send the message via local SMTP server.
 
-    server = smtplib.SMTP('smtp.gmail.com', 587)
-    # gmail SSL port: 'smtp.gmail.com:587'
-    # MIT port: outgoing.mit.edu:25
-    # MIT port: outgoing.mit.edu:587, username: Kerberos username (without @mit.edu), pass: kerboras pass
+    if from_email.endswith('@gmail.com'):
 
-    server.starttls()
-    server.login(from_email, from_pass)
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        # gmail SSL port: 'smtp.gmail.com:587'
+        # MIT port: outgoing.mit.edu:25
+        # MIT port: outgoing.mit.edu:587, username: Kerberos username (without @mit.edu), pass: kerboras pass
 
-    # sendmail function takes 3 arguments: sender's address, recipient's address
-    # and message to send - here it is sent as one string.
-    server.sendmail(from_email, to_email, msg.as_string())
-    server.quit()
+        server.starttls()
+        server.login(from_email, from_pass)
 
-    # TODO: Alternative: using non-authenticated mit email. Does not currently work.
-    # server = smtplib.SMTP('outgoing.mit.edu:25')
-    # server.sendmail('asma_gh@mit.edu', to_email, msg.as_string())
-    # server.quit()
-
-    logging.info("Email sent successfully!")
+        # sendmail function takes 3 arguments: sender's address, recipient's address
+        # and message to send - here it is sent as one string.
+        server.sendmail(from_email, to_email, msg.as_string())
+        server.quit()
+        logging.info("Email sent successfully!")
+    elif from_email.endswith('@mit.edu'):
+        server = smtplib.SMTP('outgoing.mit.edu:25')
+        server.sendmail(from_email, to_email, msg.as_string())
+        server.quit()
+        logging.info("Email sent successfully!")
+    else:
+        print('Email not sent. Only gmail or mit email is supported for the from_email.')
+        logging.warning('Email not sent. Only gmail or mit email is supported for the from_email.')

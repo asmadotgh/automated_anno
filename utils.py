@@ -26,11 +26,12 @@ class Utils:
 
     SPREADSHEET_STARTING_ROW = 2
 
-    FROM_EMAIL = 'ashdown.anno@gmail.com'
-    FROM_PASS = 'tdyQm886QcwAZQS'
+    FROM_EMAIL = 'ashdown-anno@mit.edu'
+    FROM_PASS = 'REPLACE WITH PASS'
     CURR_DATE = dt.date.today().strftime(DATE_FORMAT)
-    DURATION = 'all'     # '?W', '?M', '?D', 'ALL'
-    TO_EMAIL = 'asma_gh@mit.edu'  # ashdown-anno@mit.edu
+    DURATION = '1W'     # '?W', '?M', '?D', 'ALL'
+    TO_EMAIL = 'ashdown-anno@mit.edu'    # 'asma_gh@mit.edu'
+    LOGS_EMAIL = 'ashdown-anno@mit.edu'  # 'asma_gh@mit.edu'
 
     @staticmethod
     def is_valid_date(inp):

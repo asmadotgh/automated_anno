@@ -38,6 +38,10 @@ if __name__ == "__main__":
     argparser.add_argument('--to_email', type=str, default=Utils.TO_EMAIL,
                            help="<to> is an optional email address."
                                 "If not set, the default value will be used.")
+    argparser.add_argument('--logs_email', type=str, default=Utils.LOGS_EMAIL,
+                           help="<bcc> is an optional email address. The log files are sent to another email to notify "
+                                "Ashdown officers about success/failure of sending automated emails."
+                                "If not set, the default value will be used.")
     argparser.add_argument('--covering', type=str, default='all',
                            help=".")
     args = argparser.parse_args()
