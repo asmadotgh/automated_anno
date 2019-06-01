@@ -5,7 +5,7 @@ This code automatically sends announcement emails to Ashdown community based on 
 pip install -r requirements.txt
 
 ## Usage
-python main.py [--start_date=\<MM/DD/YYYY>  --duration=\<?{D/W/M}/ALL> --from_email=\<from> --from_pass=\<pass> --to_email=<to> --logs_email=\<cc>]
+python main.py [--start_date=\<MM/DD/YYYY>  --duration=\<?{D/W/M}/ALL> --from_email=\<from> --from_pass=\<pass> --to_email=\<to> --logs_email=\<cc>]
 
 \<MM/DD/YYYY> is the starting date. It is optional. If not specified then anno will be generated for a week from today.
 
