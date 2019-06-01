@@ -5,6 +5,7 @@ Configurations for the log files.
 import logging.config
 import sys
 
+
 class _ExcludeErrorsFilter(logging.Filter):
     def filter(self, record):
         """Filters out log messages with log level ERROR (numeric value: 40) or higher."""

@@ -15,7 +15,7 @@ def timely(inp_date_str, start_date_str, duration):
     inp_date = dt.datetime.strptime(inp_date_str, Utils.DATE_FORMAT)
     start_date = dt.datetime.strptime(start_date_str, Utils.DATE_FORMAT)
     end_date = dt.datetime.strptime(start_date_str, Utils.DATE_FORMAT) + duration
-    return inp_date >= start_date and inp_date <= end_date
+    return (inp_date >= start_date) and (inp_date <= end_date)
 
 
 def parse_events(curr_date, duration):

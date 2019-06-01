@@ -6,8 +6,6 @@ Output: sends email to the receiver email set above.
 
 # TODO: p0 document usage in the Ashdown wiki
 
-import logging
-import datetime as dt
 import argparse
 from utils import Utils
 from logging_config import *

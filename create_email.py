@@ -101,84 +101,96 @@ def create_email(from_email, from_pass, curr_date, duration_input, to_email):
         logging.info('No events in the specified week. NOT sending emails.')
         return
 
-    # Create message container - the correct MIME type is multipart/alternative.
-    msg = MIMEMultipart('alternative')
-    msg['Subject'] = 'Ashdown-Anno for ' + create_human_readable_date(curr_date)
-    msg['From'] = 'Ashdown Announcements <' + from_email + '>'
-    msg['To'] = to_email
+    print('\n\nThe following events will be included in the automated announcement email: \n')
+    print(event_df)
+    validated = ''
+    while validated.lower() not in ['n', 'no', 'y', 'yes']:
+        validated = input('Send email (Y/N)? ')
 
-    # Create the body of the message (a plain-text and an HTML version).
-    txt = ''
-    html = """\
-    <html>
-      <head>
-        <style>
-          html, body {
-            height: 100%;
-          }
-          img.inline {
-            height: 50 %;
-            width: 50 %;
-          }
-        </style>
-      </head>
-      <body>
-        <h1>Ashdown Events</h1>
-        <h2>Summary</h2>
-        <br>
+    if validated.lower() == 'n' or validated.lower() == 'no':
+        logging.info('Events were not approved by the officer. Aborting sending email.')
+        return
+
+    elif validated.lower() == 'y' or validated.lower() == 'yes':
+        # Create message container - the correct MIME type is multipart/alternative.
+        msg = MIMEMultipart('alternative')
+        msg['Subject'] = 'Ashdown-Anno for ' + create_human_readable_date(curr_date)
+        msg['From'] = 'Ashdown Announcements <' + from_email + '>'
+        msg['To'] = to_email
+
+        # Create the body of the message (a plain-text and an HTML version).
+        txt = ''
+        html = """\
+        <html>
+          <head>
+            <style>
+              html, body {
+                height: 100%;
+              }
+              img.inline {
+                height: 50 %;
+                width: 50 %;
+              }
+            </style>
+          </head>
+          <body>
+            <h1>Ashdown Events</h1>
+            <h2>Summary</h2>
+            <br>
+            """
+
+        for idx, row in event_df.iterrows():
+            row_txt, row_html = create_summary_item(idx+1, row)
+            txt += row_txt
+            html += row_html
+        for idx, row in event_df.iterrows():
+            row_txt, row_html = create_full_item(idx+1, row)
+            txt += row_txt
+            html += row_html
+        html += """\
+            <!-- end main part of page -->
+            </table><br/>
+            <div align="center" class="smalltext" style="color:#A0A0A0;">
+            &copy; 2019 MIT.
+            Please report feedback about automated announcement emails to ashdown-tech (at) mit (dot) edu.<br/><br/>
+            </div>
+          </body>
+        </html>
         """
 
-    for idx, row in event_df.iterrows():
-        row_txt, row_html = create_summary_item(idx+1, row)
-        txt += row_txt
-        html += row_html
-    for idx, row in event_df.iterrows():
-        row_txt, row_html = create_full_item(idx+1, row)
-        txt += row_txt
-        html += row_html
-    html += """\
-        <!-- end main part of page -->
-        </table><br/>
-        <div align="center" class="smalltext" style="color:#A0A0A0;">
-        &copy; 2019 MIT.
-        Please report feedback about automated announcement emails to ashdown-tech (at) mit (dot) edu.<br/><br/>
-        </div>
-      </body>
-    </html>
-    """
+        # Record the MIME types of both parts - text/plain and text/html.
+        part1 = MIMEText(txt, 'plain')
+        part2 = MIMEText(html, 'html')
 
-    # Record the MIME types of both parts - text/plain and text/html.
-    part1 = MIMEText(txt, 'plain')
-    part2 = MIMEText(html, 'html')
+        # Attach parts into message container.
+        # According to RFC 2046, the last part of a multipart message, in this case
+        # the HTML message, is best and preferred.
+        msg.attach(part1)
+        msg.attach(part2)
 
-    # Attach parts into message container.
-    # According to RFC 2046, the last part of a multipart message, in this case
-    # the HTML message, is best and preferred.
-    msg.attach(part1)
-    msg.attach(part2)
+        # Send the message via local SMTP server.
 
-    # Send the message via local SMTP server.
+        if from_email.endswith('@gmail.com'):
 
-    if from_email.endswith('@gmail.com'):
+            server = smtplib.SMTP('smtp.gmail.com', 587)
+            # gmail SSL port: 'smtp.gmail.com:587'
+            # MIT port: outgoing.mit.edu:25
+            # MIT port: outgoing.mit.edu:587, username: Kerberos username (without @mit.edu), pass: kerboras pass
 
-        server = smtplib.SMTP('smtp.gmail.com', 587)
-        # gmail SSL port: 'smtp.gmail.com:587'
-        # MIT port: outgoing.mit.edu:25
-        # MIT port: outgoing.mit.edu:587, username: Kerberos username (without @mit.edu), pass: kerboras pass
+            server.starttls()
+            server.login(from_email, from_pass)
 
-        server.starttls()
-        server.login(from_email, from_pass)
+            # sendmail function takes 3 arguments: sender's address, recipient's address
+            # and message to send - here it is sent as one string.
+            server.sendmail(from_email, to_email, msg.as_string())
+            server.quit()
+            logging.info("Email sent successfully!")
+        elif from_email.endswith('@mit.edu'):
+            server = smtplib.SMTP('outgoing.mit.edu:25')
+            server.sendmail(from_email, to_email, msg.as_string())
+            server.quit()
+            logging.info("Email sent successfully!")
+        else:
+            print('Email not sent. Only gmail or mit email is supported for the from_email.')
+            logging.warning('Email not sent. Only gmail or mit email is supported for the from_email.')
 
-        # sendmail function takes 3 arguments: sender's address, recipient's address
-        # and message to send - here it is sent as one string.
-        server.sendmail(from_email, to_email, msg.as_string())
-        server.quit()
-        logging.info("Email sent successfully!")
-    elif from_email.endswith('@mit.edu'):
-        server = smtplib.SMTP('outgoing.mit.edu:25')
-        server.sendmail(from_email, to_email, msg.as_string())
-        server.quit()
-        logging.info("Email sent successfully!")
-    else:
-        print('Email not sent. Only gmail or mit email is supported for the from_email.')
-        logging.warning('Email not sent. Only gmail or mit email is supported for the from_email.')

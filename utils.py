@@ -1,7 +1,8 @@
 import datetime as dt
-import logging
+from logging_config import *
 import sys
 import re
+
 
 class Utils:
 
