@@ -40,6 +40,19 @@ def parse_events(curr_date, duration):
         logging.warning('No data found.')
     else:
         for idx, row in enumerate(values):
+            necessary_cols = [0, 1, 2, 4, 5]
+            missing_necessary_col = False
+            if len(row) < 6:
+                missing_necessary_col = True
+            else:
+                for i in necessary_cols:
+                    if not row[i]:
+                        missing_necessary_col = True
+            if missing_necessary_col:
+                logging.warning(
+                    'Missing necessary values: event name, date, start time, location, description. Skipping row ' + str(
+                        idx + Utils.SPREADSHEET_STARTING_ROW) + '.')
+                continue
             if not Utils.is_valid_date(row[1]):
                 logging.warning(
                     'Incorrect date format. Skipping row ' + str(idx + Utils.SPREADSHEET_STARTING_ROW) + '.')
