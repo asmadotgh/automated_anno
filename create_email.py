@@ -52,7 +52,7 @@ def create_summary_item(idx, row):
 
     html = '<b>' + str(idx) + '. ' + row['title'] + ', ' + create_human_readable_date(row['date']) + ', ' + \
              create_human_readable_time(row['start_time']) + create_human_readable_end_time(row['end_time']) + \
-           '</b> <br>'
+           '</b> \r\n <br>'
     return txt, html
 
 
