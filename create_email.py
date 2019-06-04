@@ -99,7 +99,7 @@ def create_email(from_email, from_pass, curr_date, duration_input, to_email):
         return
 
     print('\n\nThe following events will be included in the automated announcement email: \n')
-    print(event_df)
+    print(event_df.to_string())
     validated = ''
     while validated.lower() not in ['n', 'no', 'y', 'yes']:
         validated = input('Send email (Y/N)? ')
