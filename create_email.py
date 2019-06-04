@@ -149,7 +149,7 @@ def create_email(from_email, from_pass, curr_date, duration_input, to_email):
             </table><br/>
             <div align="center" class="smalltext" style="color:#A0A0A0;">
             &copy; 2019 MIT.
-            Please report feedback about automated announcement emails to ashdown-tech (at) mit (dot) edu.<br/><br/>
+            Please report feedback about automated announcement emails to ashdown-anno (at) mit (dot) edu.<br/><br/>
             </div>
           </body>
         </html>
