@@ -48,7 +48,7 @@ def create_human_readable_end_time(inp_time):
 
 def create_summary_item(idx, row):
     txt = str(idx) + '. ' + row['title'] + ', ' + create_human_readable_date(row['date']) + ', ' + \
-          create_human_readable_time(row['start_time']) + create_human_readable_end_time(row['end_time']) + '\n'
+          create_human_readable_time(row['start_time']) + create_human_readable_end_time(row['end_time']) + '\r\n'
 
     html = '<b>' + str(idx) + '. ' + row['title'] + ', ' + create_human_readable_date(row['date']) + ', ' + \
              create_human_readable_time(row['start_time']) + create_human_readable_end_time(row['end_time']) + \
@@ -57,15 +57,15 @@ def create_summary_item(idx, row):
 
 
 def create_full_item(idx, row):
-    txt = '\n' + \
-             str(idx) + '. ' + row['title'] + '\n' + create_human_readable_date(row['date']) + ', ' + \
+    txt = '\r\n' + \
+             str(idx) + '. ' + row['title'] + '\r\n' + create_human_readable_date(row['date']) + ', ' + \
           create_human_readable_time(row['start_time']) + create_human_readable_end_time(row['end_time']) + ', ' + \
-          row['location'] + '\n' + row['description'] + '\n'
+          row['location'] + '\r\n' + row['description'].replace('\n', '\r\n') + '\r\n'
 
     html = '<hr>' + \
-           '<b>' + str(idx) + '. ' + row['title'] + '<br>' + create_human_readable_date(row['date']) + ', ' + \
+           '<b>' + str(idx) + '. ' + row['title'] + '\r\n <br>' + create_human_readable_date(row['date']) + ', ' + \
            create_human_readable_time(row['start_time']) + create_human_readable_end_time(row['end_time']) + ', ' + \
-           row['location'] + '</b> <br>' + row['description'] + '<br>'
+           row['location'] + '</b> \r\n <br>' + row['description'].replace('\n', '\r\n <br>') + '\r\n <br>'
     if row['image']:
         src_prefix = 'https://drive.google.com/viewerng/viewer?embedded=true&url='
         html += 'Click <a href="' + row['image'] + '">here</a> to view the corresponding poster/image.<br>'
