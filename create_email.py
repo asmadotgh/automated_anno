@@ -27,6 +27,7 @@ import smtplib
 import datetime as dt
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+import re
 
 from logging_config import *
 from parse_events import parse_events
@@ -56,16 +57,30 @@ def create_summary_item(idx, row):
     return txt, html
 
 
+def _hyperlink(match_obj):
+    url = match_obj.group(0)
+    # Email
+    if Utils.EMAIL_REGEX.match(url):
+        return f'<a href="mailto:{url}">{url}</a>'
+    # Web links
+    return f'<a href="{url}">{url}</a>'
+
+
 def create_full_item(idx, row):
     txt = '\r\n' + \
              str(idx) + '. ' + row['title'] + '\r\n' + create_human_readable_date(row['date']) + ', ' + \
           create_human_readable_time(row['start_time']) + create_human_readable_end_time(row['end_time']) + ', ' + \
           row['location'] + '\r\n' + row['description'].replace('\n', '\r\n') + '\r\n'
 
+    # Explicitly enforcing hyperlinks
+    desc_hyperlinked = row['description']
+    desc_hyperlinked = re.sub(Utils.URL_REGEX, _hyperlink, desc_hyperlinked)
+    print (desc_hyperlinked)
+
     html = '<hr>' + \
            '<b>' + str(idx) + '. ' + row['title'] + '\r\n <br>' + create_human_readable_date(row['date']) + ', ' + \
            create_human_readable_time(row['start_time']) + create_human_readable_end_time(row['end_time']) + ', ' + \
-           row['location'] + '</b> \r\n <br>' + row['description'].replace('\n', '\r\n <br>') + '\r\n <br>'
+           row['location'] + '</b> \r\n <br>' + desc_hyperlinked.replace('\n', '\r\n <br>') + '\r\n <br>'
     if row['image']:
         src_prefix = 'https://drive.google.com/viewerng/viewer?embedded=true&url='
         html += 'Click <a href="' + row['image'] + '">here</a> to view the corresponding poster/image.<br>'

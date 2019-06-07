@@ -25,7 +25,9 @@ class Utils:
     INLINE_TIME_FORMAT = 'HH:MM:SS AM/PM'
     HUMAN_READABLE_TIME_FORMAT = '%I:%M %p'
 
-    EMAIL_REGEX = re.compile(r"[^@]+@[^@]+\.[^@]+")
+    EMAIL_REGEX = re.compile(r"[^\s^@]+@[^\s^@]+\.[^\s^@^\.]+")
+    # TODO: find a url_regex that also covers @emails
+    URL_REGEX ='((?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+)|([^\s^@]+@[^\s^@]+\.[^\s^@^\.]+)'
 
     SPREADSHEET_STARTING_ROW = 2
 
