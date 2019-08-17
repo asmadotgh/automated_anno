@@ -18,7 +18,7 @@ def timely(inp_date_str, start_date_str, duration):
 
 
 def parse_events(curr_date, duration):
-    df = pd.DataFrame(columns=['title', 'date', 'start_time', 'end_time', 'location', 'description', 'image'])
+    df = pd.DataFrame(columns=['title', 'date', 'start_time', 'end_time', 'location', 'description', 'image', 'contact'])
 
     # The file token.json stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
@@ -66,7 +66,8 @@ def parse_events(curr_date, duration):
                 continue
             df = df.append(
                 pd.Series(data={'title': row[0], 'date': row[1], 'start_time': row[2], 'end_time': row[3],
-                                'location': row[4], 'description': row[5], 'image': row[6] if len(row) > 6 else None}),
+                                'location': row[4], 'description': row[5], 'image': row[6] if len(row) > 6 else None,
+                                'contact': row[7] if len(row) > 7 else None}),
                 ignore_index=True)
 
     df.sort_values(by=['date', 'start_time'], inplace=True)

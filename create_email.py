@@ -13,11 +13,13 @@ Summary
 1. [title]
 [date], [time]{-[time]}, [location]
 [event detail]
+{Contact email: [email]}
 [poster image if available]
 -------------------------
 2. [title]
 [date], [time]{-[time]}, [location]
 [event detail]
+{Contact email: [email]}
 [poster image if available]
 ...
 
@@ -75,12 +77,17 @@ def create_full_item(idx, row):
     # Explicitly enforcing hyperlinks
     desc_hyperlinked = row['description']
     desc_hyperlinked = re.sub(Utils.URL_REGEX, _hyperlink, desc_hyperlinked)
-    print (desc_hyperlinked)
 
     html = '<hr>' + \
            '<b>' + str(idx) + '. ' + row['title'] + '\r\n <br>' + create_human_readable_date(row['date']) + ', ' + \
            create_human_readable_time(row['start_time']) + create_human_readable_end_time(row['end_time']) + ', ' + \
            row['location'] + '</b> \r\n <br>' + desc_hyperlinked.replace('\n', '\r\n <br>') + '\r\n <br>'
+
+    if row['contact']:
+        contact_hyperlinked = row['contact']
+        contact_hyperlinked = re.sub(Utils.URL_REGEX, _hyperlink, contact_hyperlinked)
+        html+= '\r\n <br> <b>Contact Email: </b>' + contact_hyperlinked.replace('\n', '\r\n <br>') + '\r\n <br>'
+
     if row['image']:
         src_prefix = 'https://drive.google.com/viewerng/viewer?embedded=true&url='
         html += 'Click <a href="' + row['image'] + '">here</a> to view the corresponding poster/image.<br>'
