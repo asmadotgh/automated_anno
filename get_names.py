@@ -3,7 +3,9 @@ import os
 import requests
 
 
+
 # python get_names.py
+# alternatively, ldapsearch -x -H ldaps://ldap.mit.edu -b ou=moira,dc=mit,dc=edu uid=<kerberos> looping over kerberos
 if __name__ == "__main__":
     df = pd.read_csv(os.path.join('data', 'ashdown_mailinglist.txt'), sep="\n", header=None)
     num_users = len(df)
@@ -12,14 +14,17 @@ if __name__ == "__main__":
         series['kerboras'] = series['email'][:series['email'].find('@mit.edu')]
         try:
             r = requests.get('https://web.mit.edu/bin/cgicso?options=general&query={}'.format(series['kerboras']))
+            two_matches = r.text.find('There were 2 matches to your request.')>=0
             found = r.text.find('No matches to your query') == -1
-            if found:
-                start = r.text.find('name: ')
-                end = r.text.find('\n     email: ')
-                name_str = r.text[start+len('name: '):end]
-                comma = name_str.find(', ')
-                series['lastname'] = name_str[:comma]
-                series['firstname'] = name_str[comma + len(', '):]
+            if two_matches or not found:
+                return series
+
+            start = r.text.find('name: ')
+            end = r.text.find('\n     email: ')
+            name_str = r.text[start+len('name: '):end]
+            comma = name_str.find(', ')
+            series['lastname'] = name_str[:comma]
+            series['firstname'] = name_str[comma + len(', '):]
         except:
             print('Error while retrieving user {}'.format(series['kerboras']))
         finally:
