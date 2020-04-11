@@ -3,3 +3,4 @@
 .idea/*
 __*
 data
+*.egg-info
