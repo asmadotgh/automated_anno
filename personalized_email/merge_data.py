@@ -10,5 +10,4 @@ if __name__ == "__main__":
     # df3 = pd.read_csv(os.path.join('data', 'processed_retrieved_emails_bu.csv'))
     # merged_df = pd.merge(df1, df3, on=['kerberos'], how='right')
     merged_df.to_csv(os.path.join('data', 'merged_emails.csv'))
-    import pdb; pdb.set_trace()
     print(merged_df)
