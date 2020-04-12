@@ -1,6 +1,5 @@
 import argparse
 import pandas as pd
-import numpy as np
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -47,18 +46,13 @@ def send_logs_email(from_email, from_pass, logs_email):
         print('Logs email not sent. Only gmail or mit email is supported for the from_email.')
 
 
-def create_content(content, name):
-    content = content.replace('<name>', name)
-    txt = content.replace('\n', '\r\n')
-    html = content.replace('\n', '\r\n <br>')
-    return txt, html
-
-
-def create_email(from_email, from_pass, content, to_email, to_name):
+def create_content(from_email, content, to_email, to_name):
     from_email = from_email.lower()
     to_email = to_email.lower()
 
-    content_txt, content_html = create_content(content, to_name)
+    content = content.replace('<name>', to_name)
+    content_txt = content.replace('\n', '\r\n')
+    content_html = content.replace('\n', '\r\n <br>')
 
     # Create message container - the correct MIME type is multipart/alternative.
     msg = MIMEMultipart('alternative')
@@ -69,34 +63,34 @@ def create_email(from_email, from_pass, content, to_email, to_name):
     # Create the body of the message (a plain-text and an HTML version).
     txt = ''
     html = """\
-    <html>
-      <head>
-        <style>
-          html, body {
-            height: 100%;
-          }
-          img.inline {
-            height: 50 %;
-            width: 50 %;
-          }
-        </style>
-      </head>
-      <body>
-        """
+        <html>
+          <head>
+            <style>
+              html, body {
+                height: 100%;
+              }
+              img.inline {
+                height: 50 %;
+                width: 50 %;
+              }
+            </style>
+          </head>
+          <body>
+            """
 
     txt += content_txt
     html += content_html
 
     html += """\
-        <!-- end main part of page -->
-        <br/>
-        <div align="center" class="smalltext" style="color:#A0A0A0;">
-        &copy; 2019 MIT.
-        Please report feedback to ashdown-anno (at) mit (dot) edu.<br/><br/>
-        </div>
-      </body>
-    </html>
-    """
+            <!-- end main part of page -->
+            <br/>
+            <div align="center" class="smalltext" style="color:#A0A0A0;">
+            &copy; 2019 MIT.
+            Please report feedback to ashdown-anno (at) mit (dot) edu.<br/><br/>
+            </div>
+          </body>
+        </html>
+        """
 
     # Record the MIME types of both parts - text/plain and text/html.
     part1 = MIMEText(txt, 'plain')
@@ -107,6 +101,12 @@ def create_email(from_email, from_pass, content, to_email, to_name):
     # the HTML message, is best and preferred.
     msg.attach(part1)
     msg.attach(part2)
+
+    return msg
+
+
+def send_emails(from_email, from_pass, content, df):
+    from_email = from_email.lower()
 
     # Send the message via local SMTP server.
 
@@ -120,19 +120,26 @@ def create_email(from_email, from_pass, content, to_email, to_name):
         server.starttls()
         server.login(from_email, from_pass)
 
-        # sendmail function takes 3 arguments: sender's address, recipient's address
-        # and message to send - here it is sent as one string.
-        server.sendmail(from_email, to_email, msg.as_string())
-        server.quit()
-        logging.info("Email sent successfully to {}!".format(to_email))
     elif from_email.endswith('@mit.edu'):
         server = smtplib.SMTP('outgoing.mit.edu:25')
-        server.sendmail(from_email, to_email, msg.as_string())
-        server.quit()
-        logging.info("Email sent successfully to {}!".format(to_email))
+
     else:
         print('Email not sent. Only gmail or mit email is supported for the from_email.')
         logging.warning('Email not sent. Only gmail or mit email is supported for the from_email.')
+
+    for index, row in df.iterrows():
+        try:
+            if '@' in str(row['email']):
+                to_email = row['email']
+                msg = create_content(from_email, content, to_email, row['firstname'])
+                server.sendmail(from_email, to_email, msg.as_string())
+                logging.info("Email sent successfully to {}!".format(to_email))
+        except:
+            logging.warning('Exception occurred. Email was not sent to {}.'.format(to_email))
+
+    # sendmail function takes 3 arguments: sender's address, recipient's address
+    # and message to send - here it is sent as one string.
+    server.quit()
 
 
 # Sample usage
@@ -180,12 +187,6 @@ if __name__ == "__main__":
         logging.info('Email was not approved by the officer. Aborting sending email.')
     elif validated.lower() == 'y' or validated.lower() == 'yes':
         try:
-            for index, row in df.iterrows():
-                try:
-                    if '@' in str(row['email']):
-                        create_email(args.from_email, args.from_pass, content, row['email'], row['firstname'])
-                except:
-                    logging.warning('Exception occurred. Email was not sent to {}.'.format(row['email']))
-
+            send_emails(args.from_email, args.from_pass, content, df)
         finally:
             send_logs_email(args.from_email, args.from_pass, args.logs_email)
