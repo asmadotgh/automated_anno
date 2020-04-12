@@ -1,5 +1,6 @@
 import argparse
 import pandas as pd
+import numpy as np
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -123,12 +124,12 @@ def create_email(from_email, from_pass, content, to_email, to_name):
         # and message to send - here it is sent as one string.
         server.sendmail(from_email, to_email, msg.as_string())
         server.quit()
-        logging.info("Email sent successfully!")
+        logging.info("Email sent successfully to {}!".format(to_email))
     elif from_email.endswith('@mit.edu'):
         server = smtplib.SMTP('outgoing.mit.edu:25')
         server.sendmail(from_email, to_email, msg.as_string())
         server.quit()
-        logging.info("Email sent successfully!")
+        logging.info("Email sent successfully to {}!".format(to_email))
     else:
         print('Email not sent. Only gmail or mit email is supported for the from_email.')
         logging.warning('Email not sent. Only gmail or mit email is supported for the from_email.')
@@ -168,8 +169,8 @@ if __name__ == "__main__":
     print('\n\nThe following email will be sent: \n')
     print(content)
 
-    print ('\n\nThe following list (#{}) will receive the email:\n'.format(len(df)))
-    print (df)
+    print('\n\nThe following list (#{}) will receive the email:\n'.format(len(df)))
+    print(df)
 
     validated = ''
     while validated.lower() not in ['n', 'no', 'y', 'yes']:
@@ -180,6 +181,11 @@ if __name__ == "__main__":
     elif validated.lower() == 'y' or validated.lower() == 'yes':
         try:
             for index, row in df.iterrows():
-                create_email(args.from_email, args.from_pass, content, row['email'], row['firstname'])
+                try:
+                    if '@' in str(row['email']):
+                        create_email(args.from_email, args.from_pass, content, row['email'], row['firstname'])
+                except:
+                    logging.warning('Exception occurred. Email was not sent to {}.'.format(row['email']))
+
         finally:
             send_logs_email(args.from_email, args.from_pass, args.logs_email)
