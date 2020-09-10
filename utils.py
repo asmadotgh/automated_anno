@@ -35,8 +35,8 @@ class Utils:
     FROM_PASS = 'REPLACE WITH PASS'
     CURR_DATE = dt.date.today().strftime(DATE_FORMAT)
     DURATION = '1W'     # '?W', '?M', '?D', 'ALL'
-    TO_EMAIL = 'ashdown-anno@mit.edu'    # 'asma_gh@mit.edu'
-    LOGS_EMAIL = 'ashdown-anno@mit.edu'  # 'asma_gh@mit.edu'
+    TO_EMAIL = 'ashdown-anno@mit.edu'
+    LOGS_EMAIL = 'ashdown-anno@mit.edu'
 
     @staticmethod
     def is_valid_date(inp):
